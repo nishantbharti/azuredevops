@@ -1,0 +1,267 @@
+{
+	"$schema": "http://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+	"contentVersion": "1.0.0.0",
+	"parameters": {
+		"factoryName": {
+			"type": "string",
+			"metadata": "Data Factory name",
+			"defaultValue": "sample-dev-adf"
+		},
+		"LS_BLOB_connectionString": {
+			"type": "secureString",
+			"metadata": "Secure string for 'connectionString' of 'LS_BLOB'"
+		},
+		"LS_KV_properties_typeProperties_baseUrl": {
+			"type": "string",
+			"defaultValue": "https://sampledevkey.vault.azure.net/"
+		}
+	},
+	"variables": {
+		"factoryId": "[concat('Microsoft.DataFactory/factories/', parameters('factoryName'))]"
+	},
+	"resources": [
+		{
+			"name": "[concat(parameters('factoryName'), '/LS_BLOB')]",
+			"type": "Microsoft.DataFactory/factories/linkedServices",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"type": "AzureBlobStorage",
+				"typeProperties": {
+					"connectionString": "[parameters('LS_BLOB_connectionString')]"
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/LS_KV')]",
+			"type": "Microsoft.DataFactory/factories/linkedServices",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"type": "AzureKeyVault",
+				"typeProperties": {
+					"baseUrl": "[parameters('LS_KV_properties_typeProperties_baseUrl')]"
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/LS_BLOB_DS')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "LS_BLOB",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "Json",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobStorageLocation",
+						"container": "input"
+					}
+				},
+				"schema": {
+					"type": "object",
+					"properties": {
+						"$schema": {
+							"type": "string"
+						},
+						"contentVersion": {
+							"type": "string"
+						},
+						"parameters": {
+							"type": "object",
+							"properties": {
+								"storagePrefix": {
+									"type": "object",
+									"properties": {
+										"type": {
+											"type": "string"
+										},
+										"minLength": {
+											"type": "integer"
+										},
+										"maxLength": {
+											"type": "integer"
+										}
+									}
+								},
+								"storageSKU": {
+									"type": "object",
+									"properties": {
+										"type": {
+											"type": "string"
+										},
+										"defaultValue": {
+											"type": "string"
+										},
+										"allowedValues": {
+											"type": "array",
+											"items": {
+												"type": "string"
+											}
+										}
+									}
+								},
+								"location": {
+									"type": "object",
+									"properties": {
+										"type": {
+											"type": "string"
+										},
+										"defaultValue": {
+											"type": "string"
+										}
+									}
+								},
+								"appServicePlanName": {
+									"type": "object",
+									"properties": {
+										"type": {
+											"type": "string"
+										},
+										"defaultValue": {
+											"type": "string"
+										}
+									}
+								},
+								"webAppName": {
+									"type": "object",
+									"properties": {
+										"type": {
+											"type": "string"
+										},
+										"metadata": {
+											"type": "object",
+											"properties": {
+												"description": {
+													"type": "string"
+												}
+											}
+										},
+										"minLength": {
+											"type": "integer"
+										}
+									}
+								},
+								"linuxFxVersion": {
+									"type": "object",
+									"properties": {
+										"type": {
+											"type": "string"
+										},
+										"defaultValue": {
+											"type": "string"
+										},
+										"metadata": {
+											"type": "object",
+											"properties": {
+												"description": {
+													"type": "string"
+												}
+											}
+										}
+									}
+								},
+								"resourceTags": {
+									"type": "object",
+									"properties": {
+										"type": {
+											"type": "string"
+										},
+										"defaultValue": {
+											"type": "object",
+											"properties": {
+												"Environment": {
+													"type": "string"
+												},
+												"Project": {
+													"type": "string"
+												}
+											}
+										}
+									}
+								}
+							}
+						},
+						"variables": {
+							"type": "object",
+							"properties": {
+								"uniqueStorageName": {
+									"type": "string"
+								},
+								"webAppPortalName": {
+									"type": "string"
+								}
+							}
+						},
+						"resources": {
+							"type": "array",
+							"items": {
+								"type": "object",
+								"properties": {
+									"type": {
+										"type": "string"
+									},
+									"apiVersion": {
+										"type": "string"
+									},
+									"name": {
+										"type": "string"
+									},
+									"location": {
+										"type": "string"
+									},
+									"tags": {
+										"type": "string"
+									},
+									"sku": {
+										"type": "object",
+										"properties": {
+											"name": {
+												"type": "string"
+											}
+										}
+									},
+									"kind": {
+										"type": "string"
+									},
+									"properties": {
+										"type": "object",
+										"properties": {
+											"supportsHttpsTrafficOnly": {
+												"type": "boolean"
+											}
+										}
+									}
+								}
+							}
+						},
+						"outputs": {
+							"type": "object",
+							"properties": {
+								"storageEndpoint": {
+									"type": "object",
+									"properties": {
+										"type": {
+											"type": "string"
+										},
+										"value": {
+											"type": "string"
+										}
+									}
+								}
+							}
+						}
+					}
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/LS_BLOB')]"
+			]
+		}
+	]
+}
