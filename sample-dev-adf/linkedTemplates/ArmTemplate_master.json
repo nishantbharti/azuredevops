@@ -15,6 +15,10 @@
 			"type": "string",
 			"defaultValue": "https://sampledevkey.vault.azure.net/"
 		},
+		"Continuous Copy_properties_typeProperties_scope": {
+			"type": "string",
+			"defaultValue": "/subscriptions/f21c615f-8b2d-40e9-8174-8cf2b778c905/resourceGroups/sample-dev/providers/Microsoft.Storage/storageAccounts/sampledevstore"
+		},
 		"containerUri": {
 			"type": "string",
 			"metadata": "URI to storage account containing linked ARM templates"
@@ -47,6 +51,9 @@
 					},
 					"LS_KV_properties_typeProperties_baseUrl": {
 						"value": "[parameters('LS_KV_properties_typeProperties_baseUrl')]"
+					},
+					"Continuous Copy_properties_typeProperties_scope": {
+						"value": "[parameters('Continuous Copy_properties_typeProperties_scope')]"
 					}
 				}
 			},

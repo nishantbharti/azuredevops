@@ -14,6 +14,10 @@
 		"LS_KV_properties_typeProperties_baseUrl": {
 			"type": "string",
 			"defaultValue": "https://sampledevkey.vault.azure.net/"
+		},
+		"Continuous Copy_properties_typeProperties_scope": {
+			"type": "string",
+			"defaultValue": "/subscriptions/f21c615f-8b2d-40e9-8174-8cf2b778c905/resourceGroups/sample-dev/providers/Microsoft.Storage/storageAccounts/sampledevstore"
 		}
 	},
 	"variables": {
@@ -548,6 +552,36 @@
 				}
 			},
 			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/Continuous Copy')]",
+			"type": "Microsoft.DataFactory/factories/triggers",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"runtimeState": "Stopped",
+				"pipelines": [
+					{
+						"pipelineReference": {
+							"referenceName": "PL_CopyData",
+							"type": "PipelineReference"
+						},
+						"parameters": {}
+					}
+				],
+				"type": "BlobEventsTrigger",
+				"typeProperties": {
+					"blobPathBeginsWith": "/input/blobs/",
+					"ignoreEmptyBlobs": true,
+					"scope": "[parameters('Continuous Copy_properties_typeProperties_scope')]",
+					"events": [
+						"Microsoft.Storage.BlobCreated"
+					]
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/pipelines/PL_CopyData')]"
+			]
 		}
 	]
 }

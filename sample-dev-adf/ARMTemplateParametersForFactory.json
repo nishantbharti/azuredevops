@@ -10,6 +10,9 @@
 		},
 		"LS_KV_properties_typeProperties_baseUrl": {
 			"value": "https://sampledevkey.vault.azure.net/"
+		},
+		"Continuous Copy_properties_typeProperties_scope": {
+			"value": "/subscriptions/f21c615f-8b2d-40e9-8174-8cf2b778c905/resourceGroups/sample-dev/providers/Microsoft.Storage/storageAccounts/sampledevstore"
 		}
 	}
 }
