@@ -21,6 +21,75 @@
 	},
 	"resources": [
 		{
+			"name": "[concat(parameters('factoryName'), '/PL_CopyData')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "Copy Data Action",
+						"type": "Copy",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"source": {
+								"type": "JsonSource",
+								"storeSettings": {
+									"type": "AzureBlobStorageReadSettings",
+									"recursive": true,
+									"wildcardFileName": "*.json",
+									"enablePartitionDiscovery": false
+								},
+								"formatSettings": {
+									"type": "JsonReadSettings"
+								}
+							},
+							"sink": {
+								"type": "JsonSink",
+								"storeSettings": {
+									"type": "AzureBlobStorageWriteSettings"
+								},
+								"formatSettings": {
+									"type": "JsonWriteSettings"
+								}
+							},
+							"enableStaging": false
+						},
+						"inputs": [
+							{
+								"referenceName": "LS_BLOB_DS",
+								"type": "DatasetReference",
+								"parameters": {}
+							}
+						],
+						"outputs": [
+							{
+								"referenceName": "LS_BLOB_DS_Output",
+								"type": "DatasetReference",
+								"parameters": {}
+							}
+						]
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {},
+					"cancelAfter": {}
+				},
+				"annotations": []
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/datasets/LS_BLOB_DS')]",
+				"[concat(variables('factoryId'), '/datasets/LS_BLOB_DS_Output')]"
+			]
+		},
+		{
 			"name": "[concat(parameters('factoryName'), '/LS_BLOB_DS')]",
 			"type": "Microsoft.DataFactory/factories/datasets",
 			"apiVersion": "2018-06-01",
@@ -35,6 +104,223 @@
 					"location": {
 						"type": "AzureBlobStorageLocation",
 						"container": "input"
+					}
+				},
+				"schema": {
+					"type": "object",
+					"properties": {
+						"$schema": {
+							"type": "string"
+						},
+						"contentVersion": {
+							"type": "string"
+						},
+						"parameters": {
+							"type": "object",
+							"properties": {
+								"storagePrefix": {
+									"type": "object",
+									"properties": {
+										"type": {
+											"type": "string"
+										},
+										"minLength": {
+											"type": "integer"
+										},
+										"maxLength": {
+											"type": "integer"
+										}
+									}
+								},
+								"storageSKU": {
+									"type": "object",
+									"properties": {
+										"type": {
+											"type": "string"
+										},
+										"defaultValue": {
+											"type": "string"
+										},
+										"allowedValues": {
+											"type": "array",
+											"items": {
+												"type": "string"
+											}
+										}
+									}
+								},
+								"location": {
+									"type": "object",
+									"properties": {
+										"type": {
+											"type": "string"
+										},
+										"defaultValue": {
+											"type": "string"
+										}
+									}
+								},
+								"appServicePlanName": {
+									"type": "object",
+									"properties": {
+										"type": {
+											"type": "string"
+										},
+										"defaultValue": {
+											"type": "string"
+										}
+									}
+								},
+								"webAppName": {
+									"type": "object",
+									"properties": {
+										"type": {
+											"type": "string"
+										},
+										"metadata": {
+											"type": "object",
+											"properties": {
+												"description": {
+													"type": "string"
+												}
+											}
+										},
+										"minLength": {
+											"type": "integer"
+										}
+									}
+								},
+								"linuxFxVersion": {
+									"type": "object",
+									"properties": {
+										"type": {
+											"type": "string"
+										},
+										"defaultValue": {
+											"type": "string"
+										},
+										"metadata": {
+											"type": "object",
+											"properties": {
+												"description": {
+													"type": "string"
+												}
+											}
+										}
+									}
+								},
+								"resourceTags": {
+									"type": "object",
+									"properties": {
+										"type": {
+											"type": "string"
+										},
+										"defaultValue": {
+											"type": "object",
+											"properties": {
+												"Environment": {
+													"type": "string"
+												},
+												"Project": {
+													"type": "string"
+												}
+											}
+										}
+									}
+								}
+							}
+						},
+						"variables": {
+							"type": "object",
+							"properties": {
+								"uniqueStorageName": {
+									"type": "string"
+								},
+								"webAppPortalName": {
+									"type": "string"
+								}
+							}
+						},
+						"resources": {
+							"type": "array",
+							"items": {
+								"type": "object",
+								"properties": {
+									"type": {
+										"type": "string"
+									},
+									"apiVersion": {
+										"type": "string"
+									},
+									"name": {
+										"type": "string"
+									},
+									"location": {
+										"type": "string"
+									},
+									"tags": {
+										"type": "string"
+									},
+									"sku": {
+										"type": "object",
+										"properties": {
+											"name": {
+												"type": "string"
+											}
+										}
+									},
+									"kind": {
+										"type": "string"
+									},
+									"properties": {
+										"type": "object",
+										"properties": {
+											"supportsHttpsTrafficOnly": {
+												"type": "boolean"
+											}
+										}
+									}
+								}
+							}
+						},
+						"outputs": {
+							"type": "object",
+							"properties": {
+								"storageEndpoint": {
+									"type": "object",
+									"properties": {
+										"type": {
+											"type": "string"
+										},
+										"value": {
+											"type": "string"
+										}
+									}
+								}
+							}
+						}
+					}
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/LS_BLOB')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/LS_BLOB_DS_Output')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "LS_BLOB",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "Json",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobStorageLocation",
+						"container": "output"
 					}
 				},
 				"schema": {
