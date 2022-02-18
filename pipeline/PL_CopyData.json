@@ -18,8 +18,9 @@
 					"source": {
 						"type": "JsonSource",
 						"storeSettings": {
-							"type": "AzureBlobStorageReadSettings",
+							"type": "AmazonS3ReadSettings",
 							"recursive": true,
+							"wildcardFolderPath": "input",
 							"wildcardFileName": "*.json",
 							"enablePartitionDiscovery": false
 						},
@@ -40,7 +41,7 @@
 				},
 				"inputs": [
 					{
-						"referenceName": "LS_BLOB_DS",
+						"referenceName": "JS_Copy",
 						"type": "DatasetReference"
 					}
 				],
